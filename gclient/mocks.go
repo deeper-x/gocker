@@ -40,3 +40,8 @@ func (m *MockManager) ListImages() ([]types.ImageSummary, error) {
 
 	return images, nil
 }
+
+// BuildContainer create local container from pulled image
+func (m *MockManager) BuildContainer() error {
+	return nil
+}

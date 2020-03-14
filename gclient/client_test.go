@@ -33,3 +33,13 @@ func TestShowImages(t *testing.T) {
 		t.Errorf("Error listing images: %v", err)
 	}
 }
+
+func TestBuildContainer(t *testing.T) {
+	mockMgr := NewMockManager()
+
+	err := CreateContainer(mockMgr)
+
+	if err != nil {
+		t.Errorf("Error building container %v", err)
+	}
+}

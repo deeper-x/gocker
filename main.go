@@ -8,8 +8,17 @@ import (
 
 func main() {
 	mgr := gclient.NewManager()
-
 	mgr.BuildClient()
 
-	log.Println(gclient.ShowImagesIDs(mgr))
+	ok := gclient.DownloadImage(mgr, "docker.io/library/alpine")
+
+	if !ok {
+		panic("Download error...")
+	}
+
+	err := gclient.CreateContainer(mgr)
+
+	if err != nil {
+		log.Println(err)
+	}
 }

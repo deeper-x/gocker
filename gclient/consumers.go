@@ -43,3 +43,14 @@ func ShowImagesIDs(s Supplier) ([]string, error) {
 
 	return IDs, nil
 }
+
+// CreateContainer return
+func CreateContainer(s Supplier) error {
+	err := s.BuildContainer()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

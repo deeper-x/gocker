@@ -3,9 +3,11 @@ package gclient
 import (
 	"context"
 	"io"
+	"log"
 	"os"
 
 	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/client"
 )
 
@@ -15,6 +17,7 @@ type Supplier interface {
 	ListContainers() ([]string, error)
 	PullImage(string) error
 	ListImages() ([]types.ImageSummary, error)
+	BuildContainer() error
 }
 
 // Manager is the client core struct
@@ -72,4 +75,19 @@ func (m *Manager) ListImages() ([]types.ImageSummary, error) {
 	}
 
 	return images, nil
+}
+
+// BuildContainer create local container from pulled image
+func (m *Manager) BuildContainer() error {
+	body, err := m.Cli.ContainerCreate(context.Background(), &container.Config{
+		Image: "alpine",
+	}, nil, nil, "")
+
+	if err != nil {
+		return err
+	}
+
+	log.Println(body)
+
+	return nil
 }
