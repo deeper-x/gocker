@@ -1,11 +1,15 @@
 package main
 
-import "github.com/deeper-x/gocker/gclient"
+import (
+	"log"
+
+	"github.com/deeper-x/gocker/gclient"
+)
 
 func main() {
 	mgr := gclient.NewManager()
 
 	mgr.BuildClient()
 
-	mgr.ShowContainers()
+	log.Println(gclient.ShowImagesIDs(mgr))
 }

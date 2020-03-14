@@ -1,26 +1,35 @@
 package gclient
 
 import (
-	"log"
 	"testing"
 )
-
-func TestNew(t *testing.T) {
-	// man := NewManager()
-
-	// man.BuildClient()
-
-	// man.ShowContainers()
-}
 
 // TestShowContainers test list container
 func TestShowContainers(t *testing.T) {
 	mockObj := NewMockManager()
-	itIs := ShowContainers(&mockObj)
+	_, err := ShowContainers(mockObj)
 
-	log.Println("itIs:", itIs)
+	if err != nil {
+		t.Errorf("ListContainer error: %v", err)
+	}
+}
 
-	if !itIs {
-		t.Error("ListContainer error")
+// TestDownloadImage test the image pulling behaviour
+func TestDownloadImage(t *testing.T) {
+	mockMgr := NewMockManager()
+	downloaded := DownloadImage(mockMgr, "dummy-name")
+
+	if !downloaded {
+		t.Errorf("DownloadImage error")
+	}
+}
+
+func TestShowImages(t *testing.T) {
+	mockMgr := NewMockManager()
+
+	_, err := ShowImagesIDs(mockMgr)
+
+	if err != nil {
+		t.Errorf("Error listing images: %v", err)
 	}
 }

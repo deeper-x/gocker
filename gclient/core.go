@@ -2,7 +2,8 @@ package gclient
 
 import (
 	"context"
-	"fmt"
+	"io"
+	"os"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
@@ -11,7 +12,9 @@ import (
 // Supplier is the client interface
 type Supplier interface {
 	BuildClient()
-	ShowContainers() ([]string, error)
+	ListContainers() ([]string, error)
+	PullImage(string) error
+	ListImages() ([]types.ImageSummary, error)
 }
 
 // Manager is the client core struct
@@ -20,8 +23,8 @@ type Manager struct {
 }
 
 // NewManager returns the Manager struct
-func NewManager() Manager {
-	return Manager{}
+func NewManager() *Manager {
+	return &Manager{}
 }
 
 // BuildClient create new Docker client instance
@@ -51,15 +54,22 @@ func (m *Manager) ListContainers() ([]string, error) {
 	return res, nil
 }
 
-// ShowContainers is the consumer utility
-func ShowContainers(m Supplier) bool {
-	allC, err := m.ShowContainers()
+// PullImage is the image pull wrapper
+func (m *Manager) PullImage(name string) error {
+	r, err := m.Cli.ImagePull(context.Background(), name, types.ImagePullOptions{})
+
+	io.Copy(os.Stdout, r)
+
+	return err
+}
+
+// ListImages returns slice of pulled images
+func (m *Manager) ListImages() ([]types.ImageSummary, error) {
+	images, err := m.Cli.ImageList(context.Background(), types.ImageListOptions{})
 
 	if err != nil {
-		return false
+		return nil, err
 	}
 
-	fmt.Println(allC)
-
-	return true
+	return images, nil
 }

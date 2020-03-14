@@ -3,6 +3,7 @@ package gclient
 import (
 	"log"
 
+	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 )
 
@@ -12,8 +13,8 @@ type MockManager struct {
 }
 
 // NewMockManager returns MockManager instance
-func NewMockManager() MockManager {
-	return MockManager{}
+func NewMockManager() *MockManager {
+	return &MockManager{}
 }
 
 // BuildClient mock
@@ -21,7 +22,21 @@ func (m *MockManager) BuildClient() {
 	log.Println("Build client successfull")
 }
 
-// ShowContainers list system containers
-func (m *MockManager) ShowContainers() ([]string, error) {
+// ListContainers list system containers
+func (m *MockManager) ListContainers() ([]string, error) {
 	return []string{}, nil
+}
+
+// PullImage mocks the docker image pull
+func (m *MockManager) PullImage(name string) error {
+	log.Printf("Pulling mock image %v", name)
+
+	return nil
+}
+
+// ListImages returns slice of pulled images
+func (m *MockManager) ListImages() ([]types.ImageSummary, error) {
+	images := []types.ImageSummary{}
+
+	return images, nil
 }
